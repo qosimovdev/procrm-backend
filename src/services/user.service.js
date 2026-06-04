@@ -2,7 +2,7 @@ const createError = require("../createError");
 const { User, Company } = require("../model");
 
 exports.createUser = async (data, admin) => {
-    if (admin.role !== "Admin") {
+    if (admin.role !== "ADMIN") {
         throw createError("Only Admin can create users", 403);
     }
     const existingUser = await User.findOne({

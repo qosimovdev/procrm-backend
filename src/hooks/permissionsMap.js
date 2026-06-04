@@ -1,5 +1,5 @@
 const permissionsMap = {
-    Admin: [
+    ADMIN: [
         // Users
         "view_users",
         "create_user",
@@ -47,7 +47,7 @@ const permissionsMap = {
         "view_logs",
     ],
 
-    Manager: [
+    MANAGER: [
         // Users
         "view_users",
 
@@ -77,7 +77,7 @@ const permissionsMap = {
         "send_notifications",
     ],
 
-    User: [
+    DEVELOPER: [
         // Dashboard
         "view_dashboard",
 

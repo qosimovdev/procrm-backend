@@ -17,6 +17,15 @@ db.Company = require("./company.model")(
     Sequelize.DataTypes
 );
 
+db.Project = require("./project.model")(
+    sequelize,
+    Sequelize.DataTypes
+)
+
+db.ProjectMember = require("./projectMember.model")(
+    sequelize,
+    Sequelize.DataTypes
+);
 // ASSOCIATIONS
 
 // Company -> Users
@@ -30,5 +39,26 @@ db.User.belongsTo(db.Company, {
     as: "company",
 });
 
+db.Project.belongsTo(db.User, {
+    foreignKey: "ownerId",
+    as: "owner",
+});
+
+db.User.hasMany(db.Project, {
+    foreignKey: "ownerId",
+    as: "ownedProjects",
+});
+
+db.Project.belongsToMany(db.User, {
+    through: db.ProjectMember,
+    foreignKey: "projectId",
+    as: "members",
+});
+
+db.User.belongsToMany(db.Project, {
+    through: db.ProjectMember,
+    foreignKey: "userId",
+    as: "projects",
+});
 
 module.exports = db;

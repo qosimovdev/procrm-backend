@@ -17,10 +17,10 @@ router.patch("/me/avatar", auth, upload.single("avatar"), userController.updateA
 //     },
 //     userController.updateAvatar
 // );
-router.post("/", auth, role("Admin"), userController.createUser);
-router.get("/", auth, role("Admin"), userController.getUsers);
+router.post("/", auth, role("ADMIN"), userController.createUser);
+router.get("/", auth, userController.getUsers);
 router.patch("/me", auth, userController.updateMe)
-router.delete("/:id", auth, role("Admin"), userController.deleteUser)
+router.delete("/:id", auth, role("ADMIN"), userController.deleteUser)
 router.patch("/change-password", auth, userController.changePassword)
 
 module.exports = router;

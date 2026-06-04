@@ -35,13 +35,21 @@ module.exports = (sequelize, DataTypes) => {
                 type: DataTypes.STRING,
                 allowNull: true,
             },
+            // role: {
+            //     type: DataTypes.ENUM("Admin", "Manager", "Developer"),
+            //     defaultValue: "Developer",
+            // },
+            // permissions: {
+            //     type: DataTypes.JSON,
+            //     defaultValue: ["view_project"],
+            // },
             role: {
-                type: DataTypes.ENUM("Admin", "Manager", "Developer"),
-                defaultValue: "Developer",
+                type: DataTypes.ENUM("ADMIN", "MANAGER", "DEVELOPER"),
+                defaultValue: "DEVELOPER",
             },
             permissions: {
                 type: DataTypes.JSON,
-                defaultValue: ["view_project"],
+                defaultValue: [],
             },
             department: DataTypes.STRING,
             position: DataTypes.STRING,
@@ -124,13 +132,11 @@ module.exports = (sequelize, DataTypes) => {
     // Parolni yangilashda ham hash qilish
     User.beforeUpdate(async (user) => {
         if (user.changed("password")) {
-            const isHashed = user.password.startsWith("$2b$");
-            if (!isHashed) {
-                user.password = await bcrypt.hash(user.password, 10);
-            }
+            user.password = await bcrypt.hash(user.password, 10);
         }
+
         if (user.changed("role")) {
-            user.permissions = permissionsMap[user.role];
+            user.permissions = permissionsMap[user.role] || [];
         }
     });
     return User;
