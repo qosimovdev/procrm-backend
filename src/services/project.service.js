@@ -1,5 +1,5 @@
 const createError = require("../createError");
-const { Project, ProjectMember, User } = require("../model");
+const { Project, ProjectMember, User, Task } = require("../model");
 
 exports.createProject = async (data, admin) => {
     if (admin.role !== "ADMIN") {
@@ -58,9 +58,8 @@ exports.createProject = async (data, admin) => {
     }
     return project;
 };
-
 exports.getProjects = async (user) => {
-    return await Project.findAll({
+    const projects = await Project.findAll({
         where: {
             companyId: user.companyId,
             isArchived: false,
@@ -72,15 +71,41 @@ exports.getProjects = async (user) => {
                 attributes: [
                     "id",
                     "fullName",
-                    "avatar"
+                    "avatar",
                 ],
                 through: {
                     attributes: [],
                 },
             },
+            {
+                model: Task,
+                as: "tasks",
+                attributes: ["id", "status"],
+            },
         ],
         order: [["createdAt", "DESC"]],
     });
+    const result = projects.map((project) => {
+        const totalTasks =
+            project.tasks?.length || 0;
+        const tasksCompleted =
+            project.tasks?.filter(
+                (task) => task.status === "DONE"
+            ).length || 0;
+        const progress =
+            totalTasks > 0
+                ? Math.round(
+                    (tasksCompleted / totalTasks) * 100
+                )
+                : 0;
+        return {
+            ...project.toJSON(),
+            totalTasks,
+            tasksCompleted,
+            progress,
+        };
+    });
+    return result;
 };
 
 exports.getProject = async (projectId, user) => {
@@ -98,6 +123,10 @@ exports.getProject = async (projectId, user) => {
                 through: {
                     attributes: [],
                 },
+            },
+            {
+                model: Task,
+                as: "tasks",
             },
         ],
     });

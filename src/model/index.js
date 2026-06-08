@@ -26,6 +26,8 @@ db.ProjectMember = require("./projectMember.model")(
     sequelize,
     Sequelize.DataTypes
 );
+
+db.Task = require("./tasks.model")(sequelize, Sequelize.DataTypes)
 // ASSOCIATIONS
 
 // Company -> Users
@@ -59,6 +61,39 @@ db.User.belongsToMany(db.Project, {
     through: db.ProjectMember,
     foreignKey: "userId",
     as: "projects",
+});
+
+// Project -> Tasks
+db.Project.hasMany(db.Task, {
+    foreignKey: "projectId",
+    as: "tasks",
+});
+
+db.Task.belongsTo(db.Project, {
+    foreignKey: "projectId",
+    as: "project",
+});
+
+// User (assigned) -> Tasks
+db.User.hasMany(db.Task, {
+    foreignKey: "assignedTo",
+    as: "assignedTasks",
+});
+
+db.Task.belongsTo(db.User, {
+    foreignKey: "assignedTo",
+    as: "assignee",
+});
+
+// User (creator) -> Tasks
+db.User.hasMany(db.Task, {
+    foreignKey: "createdBy",
+    as: "createdTasks",
+});
+
+db.Task.belongsTo(db.User, {
+    foreignKey: "createdBy",
+    as: "creator",
 });
 
 module.exports = db;
