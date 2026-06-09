@@ -28,7 +28,7 @@ exports.register = async (data) => {
         userName: data.userName,
         email: data.email.toLowerCase(),
         password: data.password,
-        role: "Admin",
+        role: "ADMIN",
         companyId: company.id,
     });
     const token = jwt.sign(
