@@ -7,14 +7,16 @@ exports.createTask = async (req, res, next) => {
             req.user,
             req.params.projectId
         );
-
         res.status(201).json({
             success: true,
             message: "Task created successfully",
             task,
         });
-    } catch (error) {
-        next(error);
+    } catch (err) {
+        return res.status(err.statusCode || 500).json({
+            success: false,
+            message: err.message || "Internal Server Error",
+        });
     }
 };
 
@@ -24,13 +26,16 @@ exports.getTasks = async (req, res, next) => {
             req.user,
             req.params.projectId
         );
-
         res.status(200).json({
             success: true,
             tasks,
         });
     } catch (err) {
-        next(err);
+        console.log(err)
+        return res.status(err.statusCode || 500).json({
+            success: false,
+            message: err.message || "Internal Server Error",
+        });
     }
 };
 
@@ -45,8 +50,11 @@ exports.getTask = async (req, res, next) => {
             success: true,
             task,
         });
-    } catch (error) {
-        next(error);
+    } catch (err) {
+        return res.status(err.statusCode || 500).json({
+            success: false,
+            message: err.message || "Internal Server Error",
+        });
     }
 };
 
@@ -58,8 +66,11 @@ exports.getMyTasks = async (req, res, next) => {
             success: true,
             tasks,
         });
-    } catch (error) {
-        next(error);
+    } catch (err) {
+        return res.status(err.statusCode || 500).json({
+            success: false,
+            message: err.message || "Internal Server Error",
+        });
     }
 };
 
@@ -76,8 +87,11 @@ exports.updateTask = async (req, res, next) => {
             message: "Task updated successfully",
             task,
         });
-    } catch (error) {
-        next(error);
+    } catch (err) {
+        return res.status(err.statusCode || 500).json({
+            success: false,
+            message: err.message || "Internal Server Error",
+        });
     }
 };
 
@@ -94,8 +108,11 @@ exports.updateTaskStatus = async (req, res, next) => {
             message: "Task status updated successfully",
             task,
         });
-    } catch (error) {
-        next(error);
+    } catch (err) {
+        return res.status(err.statusCode || 500).json({
+            success: false,
+            message: err.message || "Internal Server Error",
+        });
     }
 };
 
@@ -110,7 +127,10 @@ exports.deleteTask = async (req, res, next) => {
             success: true,
             message: "Task deleted successfully",
         });
-    } catch (error) {
-        next(error);
+    } catch (err) {
+        return res.status(err.statusCode || 500).json({
+            success: false,
+            message: err.message || "Internal Server Error",
+        });
     }
 };

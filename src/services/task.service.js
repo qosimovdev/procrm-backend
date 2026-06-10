@@ -32,19 +32,22 @@ exports.createTask = async (data, user, projectId) => {
 };
 
 exports.getTasks = async (user, projectId) => {
-    const where = { projectId };
-    if (user.role !== "ADMIN") {
-        const member = await ProjectMember.findOne({
-            where: {
-                projectId,
-                userId: user.id,
-            },
-        });
-        if (!member) {
-            throw createError(
-                403,
-                "You are not a member of this project"
-            );
+    const where = {};
+    if (projectId) {
+        where.projectId = projectId;
+        if (user.role !== "ADMIN") {
+            const member = await ProjectMember.findOne({
+                where: {
+                    projectId,
+                    userId: user.id,
+                },
+            });
+            if (!member) {
+                throw createError(
+                    403,
+                    "You are not a member of this project"
+                );
+            }
         }
     }
     const tasks = await Task.findAll({
@@ -66,7 +69,7 @@ exports.getTasks = async (user, projectId) => {
                 attributes: ["id", "projectName"],
             },
         ],
-        order: [["created_at", "DESC"]],
+        order: [["createdAt", "DESC"]],
     });
 
     return tasks;

@@ -14,6 +14,9 @@ router.get(
     taskController.getTasks
 );
 
+router.get("/", auth, taskController.getTasks);
+
+
 // MUHIM: :id dan oldin
 router.get(
     "/my-tasks",
