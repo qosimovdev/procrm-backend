@@ -32,7 +32,9 @@ exports.createTask = async (data, user, projectId) => {
 };
 
 exports.getTasks = async (user, projectId) => {
-    const where = {};
+    const where = {
+        companyId: user.companyId,
+    };
     if (projectId) {
         where.projectId = projectId;
         if (user.role !== "ADMIN") {
@@ -71,7 +73,6 @@ exports.getTasks = async (user, projectId) => {
         ],
         order: [["createdAt", "DESC"]],
     });
-
     return tasks;
 };
 
