@@ -96,4 +96,14 @@ db.Task.belongsTo(db.User, {
     as: "creator",
 });
 
+db.Company.hasMany(db.Task, {
+    foreignKey: "companyId",
+    as: "tasks",
+});
+
+db.Task.belongsTo(db.Company, {
+    foreignKey: "companyId",
+    as: "company",
+});
+
 module.exports = db;

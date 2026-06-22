@@ -1,4 +1,4 @@
-const { User, Task, ProjectMember, Project } = require("../model");
+const { User, Task, ProjectMember, Project, Company } = require("../model");
 const createError = require("../createError");
 
 exports.createTask = async (data, user, projectId) => {
@@ -23,6 +23,7 @@ exports.createTask = async (data, user, projectId) => {
         status: data.status || "TODO",
         priority: data.priority || "MEDIUM",
         projectId,
+        companyId: user.companyId,
         assignedTo: data.assignedTo,
         createdBy: user.id,
         deadline: data.deadline,
@@ -70,6 +71,11 @@ exports.getTasks = async (user, projectId) => {
                 as: "project",
                 attributes: ["id", "projectName"],
             },
+            {
+                model: Company,
+                as: "company",
+                attributes: ["id", "name"],
+            }
         ],
         order: [["createdAt", "DESC"]],
     });
@@ -94,6 +100,11 @@ exports.getTask = async (taskId, user) => {
                 as: "project",
                 attributes: ["id", "projectName"],
             },
+            {
+                model: Company,
+                as: "company",
+                attributes: ["id", "name"],
+            }
         ],
     });
     if (!task) {
